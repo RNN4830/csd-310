@@ -1,26 +1,31 @@
 
 
-/* Rachel Nelson
- 02/04/2023
- Module 6.2 Assignment */
+import mysql.connector
+from mysql.connector import errorcode
 
--- drop database user if exists
-DROP USER IF EXISTS 'movies_user'@'localhost';
+config = {
+    "user" : "root",
+    "password" : "H$8PjYFU",
+    "host" : "localhost",
+    "database" : "movies",
+    "raise_on_warnings" : True
+}
 
+try:
+    db = mysql.connector.connect(**config)
 
--- create movies_user and grant them all privileges to the movies database
-CREATE USER 'movies_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'popcorn';
+    print ("\n Database user {} connected to MySQL on host {} with database {}".format(config["user"], config["host"], config["database"]))
 
--- grant all privileges to the movies database to user movies_user on localhost
-GRANT ALL PRIVILEGES ON movies.* TO 'movies_user'@'localhost';
+    input("\n\n Press any key to continue...")
 
+except mysql.connect.Error as err:
 
-CREATE TABLE imdb (
-    imdb_id INT NOT NULL AUTO_INCREMENT,
-    rating INT NOT NULL,
-    film_id INT NOT NULL,
-    PRIMARY KEY (imdb_id)
-);
+    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("The supplied username or password are invalid")
+    elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        print("The specified database does not exist")
+    else:
+        print(err)
 
-INSERT INTO imdb(rating, film_id)
-VALUES('8', (SELECT film_id FROM film WHERE film_name = 'Gladiator'));
+finally:
+    db.close()
