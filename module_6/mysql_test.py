@@ -5,7 +5,7 @@ from mysql.connector import errorcode
 
 config = {
     "user" : "root",
-    "password" : "H$8PjYFU",
+    "password" : ,
     "host" : "localhost",
     "database" : "movies",
     "raise_on_warnings" : True
